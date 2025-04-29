@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Checker</title>
+    <style>
+        body {
+            font-family:'Segoe UI', Tahoma, Verdana, sans-serif;
+            text-align: center;
+            margin: 0px; 
+            background: linear-gradient(135deg, #71ffff, #edffff);
+            justify-content: center;
+            align-items: center;
+        }
+        #timer {
+            font-size: 5rem;
+            margin: 20px;
+        }
+        button {
+            background-color: rgb(224, 247, 255);
+        }
+        h2 {
+            font-size: 6rem;
+            color: blue;
+        }
+        h3 {
+            font-size: 3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>SkyWatch</h2>
+
+    <p>The Ultimate Weather Checker</p>
+    <p>Check the Weather now!</p>
+
+    <input type="text" id="cityInput" placeholder="Enter City name (in english)">
+    <button onclick="getWeather()">Check</button>
+    <button onclick="getForecast()">Check Forecast</button>
+
+    <div id="weatherResult"></div>
+    <div id="forecastResult" style="margin-top: 20px;"></div>
+
+    <h4>Refresh to start over</h4>
+    <h4>Made by Voskalin, 2025</h4>
+
+    <script>
+        async function getWeather() {
+            const city = document.getElementById('cityInput').value.trim();
+            const apiKey = '84fad12ac2bdf783ee4c3c9095073990';
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=en`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('City not found');
+                }
+                const data = await response.json();
+
+                document.getElementById('weatherResult').innerHTML = `
+                    <h3>Weather in ${data.name}</h3>
+                    <p>Temp: ${data.main.temp}&#8451;</p>
+                    <p>Weather: ${data.weather[0].description}</p>
+                `;
+                document.getElementById('forecastResult').innerHTML = ""; // Jesslyn
+            } catch (error) {
+                document.getElementById('weatherResult').innerHTML = `<p style="color:red;">${error.message}</p>`;
+                document.getElementById('forecastResult').innerHTML = "";
+            }
+        }
+
+        async function getForecast() {
+            const city = document.getElementById('cityInput').value.trim();
+            const apiKey = '84fad12ac2bdf783ee4c3c9095073990';
+            const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric&lang=en`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('City not found');
+                }
+                const data = await response.json();
+                const forecastList = data.list;
+
+                let forecastHTML = `<h3>Forecast for ${data.city.name}</h3>`;
+
+                const dailyForecasts = forecastList.filter(item => item.dt_txt.includes("12:00:00"));
+
+                dailyForecasts.forEach(item => {
+                    const date = new Date(item.dt_txt);
+                    forecastHTML += `
+                        <div style="margin-bottom: 10px; padding: 10px; border: 1px solid #ccc;">
+                            <strong>${date.toLocaleDateString('en-GB')}</strong><br>
+                            Temp: ${item.main.temp}&#8451;<br>
+                            Weather: ${item.weather[0].description}
+                        </div>
+                    `;
+                });
+
+                document.getElementById('forecastResult').innerHTML = forecastHTML;
+                document.getElementById('weatherResult').innerHTML = ""; // Clear current weather if checking forecast
+            } catch (error) {
+                document.getElementById('forecastResult').innerHTML = `<p style="color:red;">${error.message}</p>`;
+                document.getElementById('weatherResult').innerHTML = "";
+            }
+        }
+    </script>
+
+<script>
+    async function getWeather() {
+        const city = document.getElementById('cityInput').value.trim();
+        const apiKey = '84fad12ac2bdf783ee4c3c9095073990';
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=en`;
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('City not found');
+            }
+            const data = await response.json();
+
+            const windSpeed = data.wind.speed; // Agra bugis asu
+            const windDeg = data.wind.deg;     // deg ahh
+
+            function getWindDirection(deg) {
+                const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+                const index = Math.round(deg / 45) % 8;
+                return directions[index];
+            }
+
+            const windDirection = getWindDirection(windDeg);
+
+            document.getElementById('weatherResult').innerHTML = `
+                <h3>Weather in ${data.name}</h3>
+                <p>Temp: ${data.main.temp}°C</p>
+                <p>Weather: ${data.weather[0].description}</p>
+                <p>Wind Speed: ${windSpeed} m/s</p>
+                <p>Wind Direction: ${windDirection} (${windDeg}°)</p>
+            `;
+        } catch (error) {
+            document.getElementById('weatherResult').innerHTML = `<p style="color:red;">${error.message}</p>`;
+        }
+    }
+</script>
+
+<script>
+    async function getWeather() {
+        const city = document.getElementById('cityInput').value.trim();
+        const apiKey = '84fad12ac2bdf783ee4c3c9095073990';
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=en`;
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('City not found');
+            }
+            const data = await response.json();
+
+            const windSpeed = data.wind.speed;
+            const windDeg = data.wind.deg;
+            const sunrise = data.sys.sunrise; // timestamp (second)
+            const sunset = data.sys.sunset;   // timestamp (second)
+            const timezoneOffset = data.timezone; // in seconds
+
+            function getWindDirection(deg) {
+                const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+                const index = Math.round(deg / 45) % 8;
+                return directions[index];
+            }
+
+            function formatTime(unixTimestamp, timezoneOffset) {
+                const date = new Date((unixTimestamp + timezoneOffset) * 1000);
+                return date.toUTCString().match(/\d{2}:\d{2}/)[0]; // ambil jam:menit
+            }
+
+            const windDirection = getWindDirection(windDeg);
+            const sunriseTime = formatTime(sunrise, timezoneOffset);
+            const sunsetTime = formatTime(sunset, timezoneOffset);
+
+            document.getElementById('weatherResult').innerHTML = `
+                <h3>Weather in ${data.name}</h3>
+                <p>Temp: ${data.main.temp}°C</p>
+                <p>Weather: ${data.weather[0].description}</p>
+                <p>Wind Speed: ${windSpeed} m/s</p>
+                <p>Wind Direction: ${windDirection} (${windDeg}°)</p>
+                <p>🌅 Sunrise: ${sunriseTime}</p>
+                <p>🌇 Sunset: ${sunsetTime}</p>
+            `;
+        } catch (error) {
+            document.getElementById('weatherResult').innerHTML = `<p style="color:red;">${error.message}</p>`;
+        }
+    }
+</script>
+
+<script>
+    async function getWeather() {
+        const city = document.getElementById('cityInput').value.trim();
+        const apiKey = '84fad12ac2bdf783ee4c3c9095073990';
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=en`;
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('City not found');
+            }
+            const data = await response.json();
+
+            const windSpeed = data.wind.speed;
+            const windDeg = data.wind.deg;
+            const sunrise = data.sys.sunrise;
+            const sunset = data.sys.sunset;
+            const timezoneOffset = data.timezone;
+
+            function getWindDirection(deg) {
+                const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+                const index = Math.round(deg / 45) % 8;
+                return directions[index];
+            }
+
+            function formatTime(unixTimestamp, timezoneOffset) {
+                const date = new Date((unixTimestamp + timezoneOffset) * 1000);
+                return date.toUTCString().match(/\d{2}:\d{2}/)[0];
+            }
+
+            const windDirection = getWindDirection(windDeg);
+            const sunriseTime = formatTime(sunrise, timezoneOffset);
+            const sunsetTime = formatTime(sunset, timezoneOffset);
+
+            // Set background color or image based on weather
+            const weatherMain = data.weather[0].main.toLowerCase();
+            changeBackground(weatherMain);
+
+            document.getElementById('weatherResult').innerHTML = `
+                <h3>Weather in ${data.name}</h3>
+                <p>Temp: ${data.main.temp}°C</p>
+                <p>Weather: ${data.weather[0].description}</p>
+                <p>Wind Speed: ${windSpeed} m/s</p>
+                <p>Wind Direction: ${windDirection} (${windDeg}°)</p>
+                <p>🌅 Sunrise: ${sunriseTime}</p>
+                <p>🌇 Sunset: ${sunsetTime}</p>
+            `;
+        } catch (error) {
+            document.getElementById('weatherResult').innerHTML = `<p style="color:red;">${error.message}</p>`;
+        }
+    }
+
+    function changeBackground(weather) {
+        if (weather.includes("cloud")) {
+            document.body.style.background = "linear-gradient(to right, #d7d2cc, #304352)"; // cloud
+        } else if (weather.includes("rain") || weather.includes("drizzle")) {
+            document.body.style.background = "linear-gradient(to right, #4e54c8, #8f94fb)"; // Rain
+        } else if (weather.includes("clear")) {
+            document.body.style.background = "linear-gradient(to right, #56ccf2, #2f80ed)"; // Sunny
+        } else if (weather.includes("snow")) {
+            document.body.style.background = "linear-gradient(to right, #e0eafc, #cfdef3)"; // Snow
+        } else if (weather.includes("thunderstorm")) {
+            document.body.style.background = "linear-gradient(to right, #141e30, #243b55)"; // some wind 
+        } else if (weather.includes("mist") || weather.includes("fog")) {
+            document.body.style.background = "linear-gradient(to right, #636363, #a2ab58)"; // misty
+        } else if (weather.includes("haze") || weather.includes("haze")) {
+            document.body.style.background = "linear-gradient(to right, #636363, #a2ab58)"; // haze
+        } else {
+            document.body.style.background = "linear-gradient(to right, #71ffff, #edffff)"; // Default
+        }
+    }
+</script>
+
+</body>
+</html>
