@@ -18,7 +18,14 @@
             margin: 20px;
         }
         button {
-            background-color: rgb(224, 247, 255);
+            background-color: rgb(118, 194, 220);
+            border: 2px solid #00aaff;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            font-family:'Segoe UI', Tahoma, Verdana, sans-serif;
+
         }
         h2 {
             font-size: 6rem;
@@ -27,6 +34,24 @@
         h3 {
             font-size: 3rem;
         }
+        input {
+            padding: 12px 16px;
+    width: 300px;
+    font-size: 16px;
+    border: 2px solid #00aaff;
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .input-group { display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; /*fixing this later*/
+    margin-top: 20px;}
+
+   
+   
     </style>
 </head>
 <body>
@@ -36,9 +61,11 @@
     <p>The Ultimate Weather Checker</p>
     <p>Check the Weather now!</p>
 
+    <div>
     <input type="text" id="cityInput" placeholder="Enter City name (in english)">
     <button onclick="getWeather()">Check</button>
     <button onclick="getForecast()">Check Forecast</button>
+    </div>
 
     <div id="weatherResult"></div>
     <div id="forecastResult" style="margin-top: 20px;"></div>
@@ -60,10 +87,14 @@
                 const data = await response.json();
 
                 document.getElementById('weatherResult').innerHTML = `
-                    <h3>Weather in ${data.name}</h3>
-                    <p>Temp: ${data.main.temp}&#8451;</p>
-                    <p>Weather: ${data.weather[0].description}</p>
-                `;
+                    <div class="weather-card">
+        <h3>${city}, ${country}</h3>
+        <p><strong>Temperature:</strong> ${temp}°C</p>
+        <p><strong>Weather:</strong> ${description}</p>
+        <p><strong>Humidity:</strong> ${humidity}%</p>
+        <p><strong>Wind:</strong> ${wind} m/s</p>
+    </div>
+`;
                 document.getElementById('forecastResult').innerHTML = ""; // Jesslyn
             } catch (error) {
                 document.getElementById('weatherResult').innerHTML = `<p style="color:red;">${error.message}</p>`;
@@ -121,8 +152,8 @@
             }
             const data = await response.json();
 
-            const windSpeed = data.wind.speed; // Agra bugis asu
-            const windDeg = data.wind.deg;     // deg ahh
+            const windSpeed = data.wind.speed; // Agra bugis setan
+            const windDeg = data.wind.deg;     // Aku pengen punya adek perempuan
 
             function getWindDirection(deg) {
                 const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
@@ -203,7 +234,7 @@
         try {
             const response = await fetch(url);
             if (!response.ok) {
-                throw new Error('City not found');
+                throw new Error('Not found');
             }
             const data = await response.json();
 
@@ -250,7 +281,7 @@
         if (weather.includes("cloud")) {
             document.body.style.background = "linear-gradient(to right, #d7d2cc, #304352)"; // cloud
         } else if (weather.includes("rain") || weather.includes("drizzle")) {
-            document.body.style.background = "linear-gradient(to right, #4e54c8, #8f94fb)"; // Rain
+            document.body.style.background = "linear-gradient(to right, #3b3e66, #8f94fb)"; // Rain
         } else if (weather.includes("clear")) {
             document.body.style.background = "linear-gradient(to right, #56ccf2, #2f80ed)"; // Sunny
         } else if (weather.includes("snow")) {
