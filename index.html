@@ -8,7 +8,8 @@
         body {
             font-family:'Segoe UI', Tahoma, Verdana, sans-serif;
             text-align: center;
-            margin: 0px; 
+            margin-top: 20px;
+            margin-bottom: 20px;
             background: linear-gradient(135deg, #71ffff, #edffff);
             justify-content: center;
             align-items: center;
@@ -22,7 +23,7 @@
             border: 2px solid #00aaff;
             border-radius: 8px;
             padding: 10px 20px;
-            font-size: 16px;
+            font-size: 20px;
             cursor: pointer;
             font-family:'Segoe UI', Tahoma, Verdana, sans-serif;
 
@@ -34,10 +35,16 @@
         h3 {
             font-size: 3rem;
         }
+        h4 {
+            font: size 20px; ;
+        }
+        p {
+            font-size: 20px;
+        }
         input {
             padding: 12px 16px;
     width: 300px;
-    font-size: 16px;
+    font-size: 20px;
     border: 2px solid #00aaff;
     border-radius: 8px;
     outline: none;
@@ -48,10 +55,19 @@
     flex-direction: column;
     align-items: center;
     gap: 10px; /*fixing this later*/
-    margin-top: 20px;}
+    margin-top: 20px;
+    }
+    button:hover {
+    background-color: #00aaff;
+    color: white;
+    transform: scale(1.07);
+    transition: all 0.2s ease;
+}
 
-   
-   
+input:focus {
+    border-color: #0077cc;
+    box-shadow: 0 0 8px rgba(0,123,255,0.5);
+}
     </style>
 </head>
 <body>
@@ -61,17 +77,19 @@
     <p>The Ultimate Weather Checker</p>
     <p>Check the Weather now!</p>
 
-    <div>
-    <input type="text" id="cityInput" placeholder="Enter City name (in english)">
-    <button onclick="getWeather()">Check</button>
-    <button onclick="getForecast()">Check Forecast</button>
-    </div>
+    <input type="text" id="cityInput" placeholder="Enter City name l">
+    <button onclick="getWeather()">Check</button> 
+    <kbd enterkeyhint="enter" onkeypress="getWeather()"></kbd>
+    <button onclick="getForecast()">Forecast</button>
 
     <div id="weatherResult"></div>
     <div id="forecastResult" style="margin-top: 20px;"></div>
 
-    <h4>Refresh to start over</h4>
     <h4>Made by Voskalin, 2025</h4>
+
+    <div class="button">
+        <button onclick="location.reload()">Reset</button>
+    </div>
 
     <script>
         async function getWeather() {
